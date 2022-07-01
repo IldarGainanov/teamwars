@@ -1,0 +1,30 @@
+name: TeamWars
+main: circus.teamwars.Manager
+version: ${project.version}
+api-version: 1.17
+permissions:
+  teamwars.manageteams:
+    description: Permission to setup teams
+    default: op
+commands:
+  addteam:
+    description: Create a new team
+    usage: /addteam <team name> <color>
+    permission: teamwars.manageteams
+  remteam:
+    description: Delete a team
+    usage: /remteam <team name>
+    permission: teamwars.manageteams
+  addmember:
+    description: Add a player to a team
+    usage: /addmember <team name> <player>
+    permission: teamwars.manageteams
+  remmember:
+    description: Remove a player from a team
+    usage: /remmember <team name> <player>
+    permission: teamwars.manageteams
+  setvip:
+    description: Make a player a VIP in a team
+    usage: /setvip <team name> <player>
+    permission: teamwars.manageteams
+
