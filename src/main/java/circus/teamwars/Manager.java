@@ -1,6 +1,7 @@
 package circus.teamwars;
 
 import circus.teamwars.commands.*;
+import circus.teamwars.listeners.PlayerLogin;
 import circus.teamwars.listeners.PlayerListener;
 import circus.teamwars.listeners.WorldLoadListener;
 import org.bukkit.Server;
@@ -28,7 +29,7 @@ public class Manager extends JavaPlugin {
 
         pm.registerEvents(new PlayerListener(), this);
         pm.registerEvents(new WorldLoadListener(), this);
-
+        pm.registerEvents(new PlayerLogin(), this);
 
         Teams.initScoreboard();
     }

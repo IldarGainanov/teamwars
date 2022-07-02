@@ -28,12 +28,16 @@ public class Teams {
     }
 
     public static void showScoreboard() {
+        initScoreboard();
+
         for (Player player : Manager.server().getOnlinePlayers()) {
             player.setScoreboard(scoreboard);
         }
     }
 
     public static void updateScoreboard() {
+        initScoreboard();
+
         ArrayList<String> strings = new ArrayList<>();
         boolean first = true;
 

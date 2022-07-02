@@ -9,7 +9,7 @@ public class WorldLoadListener implements Listener {
 
     @EventHandler
     public void onWorldLoad(WorldLoadEvent event) {
-        Teams.initScoreboard();
+        Teams.updateScoreboard();
     }
 
 }

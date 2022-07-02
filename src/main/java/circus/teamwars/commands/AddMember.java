@@ -24,7 +24,6 @@ public class AddMember implements CommandExecutor {
             return true;
         }
 
-
         return true;
     }
 }
