@@ -1,7 +1,6 @@
 package circus.teamwars.commands;
 
-import circus.teamwars.Teams;
-import org.bukkit.ChatColor;
+import circus.teamwars.TeamController;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,7 +17,7 @@ public class RemoveTeam implements CommandExecutor {
         }
 
         try {
-            Teams.deleteTeam(args[0]);
+            TeamController.deleteTeam(args[0]);
         } catch (IllegalArgumentException e) {
             commandSender.sendMessage(e.getMessage());
             return true;

@@ -1,14 +1,11 @@
 package circus.teamwars;
 
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
@@ -35,7 +32,7 @@ public class VIPTeam {
 
         int count = 0;
         Set<String> members = team.getEntries();
-        for (Player player : Manager.server().getOnlinePlayers()) {
+        for (Player player : PluginManager.server().getOnlinePlayers()) {
             if (members.contains(player.getDisplayName()) && player.getGameMode() != GameMode.SPECTATOR) {
                 count++;
             }
@@ -86,7 +83,7 @@ public class VIPTeam {
     public void killPlayer(@NotNull String player) {
         if (player.equals(VIP)) {
             deadVIP = true;
-            Teams.updateScoreboard();
+            TeamController.updateScoreboard();
         }
     }
 

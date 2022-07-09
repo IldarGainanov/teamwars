@@ -1,14 +1,11 @@
 package circus.teamwars.commands;
 
-import circus.teamwars.Teams;
-import net.kyori.adventure.text.Component;
+import circus.teamwars.TeamController;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Locale;
 
 public class AddTeam implements CommandExecutor {
 
@@ -30,7 +27,7 @@ public class AddTeam implements CommandExecutor {
 
         try {
 
-            Teams.createTeam(args[0], color);
+            TeamController.createTeam(args[0], color);
         } catch (IllegalArgumentException e) {
             commandSender.sendMessage(e.getMessage());
             return true;

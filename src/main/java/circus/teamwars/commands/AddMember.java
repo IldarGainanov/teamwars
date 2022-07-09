@@ -1,7 +1,6 @@
 package circus.teamwars.commands;
 
-import circus.teamwars.Teams;
-import org.bukkit.ChatColor;
+import circus.teamwars.TeamController;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,7 +17,7 @@ public class AddMember implements CommandExecutor {
         }
 
         try {
-            Teams.addMember(args[0], args[1]);
+            TeamController.addMember(args[0], args[1]);
         } catch (IllegalArgumentException e) {
             commandSender.sendMessage(e.getMessage());
             return true;

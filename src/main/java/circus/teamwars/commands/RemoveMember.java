@@ -1,6 +1,6 @@
 package circus.teamwars.commands;
 
-import circus.teamwars.Teams;
+import circus.teamwars.TeamController;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,7 +17,7 @@ public class RemoveMember implements CommandExecutor {
         }
 
         try {
-            Teams.removeMember(args[0], args[1]);
+            TeamController.removeMember(args[0], args[1]);
         } catch (IllegalArgumentException e) {
             commandSender.sendMessage(e.getMessage());
             return true;

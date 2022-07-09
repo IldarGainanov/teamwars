@@ -7,22 +7,23 @@ import org.bukkit.scoreboard.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public class Teams {
+public class TeamController {
     private static ScoreboardManager scoreboardManager = null;
     private static Scoreboard scoreboard;
     private static HashMap<String, VIPTeam> teamsByName = new HashMap<>();
     private static HashMap<String, VIPTeam> teamsByPlayer = new HashMap<>();
 
     public static void initScoreboard() {
-        ScoreboardManager newManager = Manager.server().getScoreboardManager();
+        ScoreboardManager newManager = PluginManager.server().getScoreboardManager();
         if (scoreboardManager == null && newManager != null) {
-            scoreboardManager = Manager.server().getScoreboardManager();
+            scoreboardManager = PluginManager.server().getScoreboardManager();
             scoreboard = scoreboardManager.getNewScoreboard();
         } else if (newManager == null) {
-            Manager.server().getLogger().warning(
+            PluginManager.server().getLogger().warning(
                     "[TeamWars] Tried to get the scoreboard manager without a loaded world");
         }
     }
@@ -30,7 +31,7 @@ public class Teams {
     public static void showScoreboard() {
         initScoreboard();
 
-        for (Player player : Manager.server().getOnlinePlayers()) {
+        for (Player player : PluginManager.server().getOnlinePlayers()) {
             player.setScoreboard(scoreboard);
         }
     }
@@ -38,16 +39,11 @@ public class Teams {
     public static void updateScoreboard() {
         initScoreboard();
 
-        ArrayList<String> strings = new ArrayList<>();
-        boolean first = true;
+        ArrayList<String> strings = new ArrayList<>(
+                Collections.singleton("State: " + GameStateController.state().toString()));
 
         for (VIPTeam team : teamsByName.values()) {
-            if (!first) {
-                strings.add("");
-            }
-
-            first = false;
-
+            strings.add("");
             strings.addAll(team.scoreboardData());
         }
 
@@ -81,9 +77,7 @@ public class Teams {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setRenderType(RenderType.INTEGER);
 
-        StringBuilder spaceBuilder = new StringBuilder("");
         int dummyScore = strings.size();
-
         for (String s : strings) {
             Score score;
             score = objective.getScore(s);
@@ -110,7 +104,7 @@ public class Teams {
     public static void deleteTeam(String name) {
         initScoreboard();
 
-        VIPTeam team =  teamsByName.get(name);
+        VIPTeam team = teamsByName.get(name);
 
         if (team == null) {
             throw new IllegalArgumentException("This team does not exist");
