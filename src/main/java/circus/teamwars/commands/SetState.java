@@ -1,8 +1,6 @@
 package circus.teamwars.commands;
 
-import circus.teamwars.GameStateController;
-import circus.teamwars.TeamController;
-import org.bukkit.ChatColor;
+import circus.teamwars.GameState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,15 +16,15 @@ public class SetState implements CommandExecutor {
             return false;
         }
 
-        GameStateController.GameState state;
+        GameState.State state;
         try {
-            state = GameStateController.GameState.valueOf(args[0].toUpperCase());
+            state = GameState.State.valueOf(args[0].toUpperCase());
         } catch (IllegalArgumentException e) {
             commandSender.sendMessage("Unknown state");
             return false;
         }
 
-        GameStateController.setState(state);
+        GameState.setState(state);
 
         return true;
     }

@@ -3,27 +3,27 @@ package circus.teamwars;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.*;
+import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
-import java.util.InputMismatchException;
-
-public class GameStateController {
-    private static GameState state = GameState.INACTIVE;
-    public static GameState state() {
+public class GameState {
+    private static State state = State.INACTIVE;
+    public static State state() {
         return state;
     }
 
-    public enum GameState {
+    public enum State {
         INACTIVE, PREPARATION, NOPVP, PVP
     }
 
-    public static void setState(GameState state) {
-        GameStateController.state = state;
+    public static void setState(State state) {
+        GameState.state = state;
 
-        if (state == GameState.PREPARATION) {
-            World world = null;
+        World world = null;
+        if (state == State.PREPARATION) {
 
             for (Player player : PluginManager.server().getOnlinePlayers()) {
                 if (world == null) {
@@ -42,7 +42,6 @@ public class GameStateController {
             }
 
         } else {
-            World world = null;
 
             for (Player player : PluginManager.server().getOnlinePlayers()) {
                 world = player.getWorld();
@@ -57,13 +56,14 @@ public class GameStateController {
             }
         }
 
-        TeamController.updateScoreboard();
+        ScoreboardController.refresh();
+
     }
 
     public static void startGameWithDelayedPVP(int seconds) {
 
 
-        if (state == GameState.PREPARATION) {
+        if (state == State.PREPARATION) {
 
             for (Player player : PluginManager.server().getOnlinePlayers()) {
                 player.setStatistic(Statistic.TIME_SINCE_REST, 0);
@@ -77,14 +77,14 @@ public class GameStateController {
                 }
             }
 
-            setState(GameState.NOPVP);
+            setState(State.NOPVP);
 
             PluginManager.server().broadcast(
                     Component.text(String.format("PVP will start in %d seconds!", seconds))
                             .color(TextColor.color(255, 0 ,0)));
 
             PluginManager.server().getScheduler().runTaskLater(PluginManager.instance(), () -> {
-                setState(GameState.PVP);
+                setState(State.PVP);
 
                 PluginManager.server().broadcast(
                         Component.text("PVP is now allowed!")
@@ -94,5 +94,15 @@ public class GameStateController {
             throw new IllegalArgumentException("Game must be in preparation state");
         }
 
+    }
+
+    public static void setConfig(YamlConfiguration config) {
+        setState(State.valueOf(config.getString("state")));
+    }
+
+    public static YamlConfiguration getConfig() {
+        YamlConfiguration config = new YamlConfiguration();
+        config.set("state", state().toString());
+        return config;
     }
 }

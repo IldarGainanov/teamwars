@@ -7,31 +7,31 @@ permissions:
     description: Permission to setup teams
     default: op
 commands:
-  addteam:
-    description: Create a new team
-    usage: /addteam <team name> <color>
+  addteams:
+    description: Create new teams
+    usage: /addteams <team name 1> <color 1> <team name 2> <color 2> ...
     permission: teamwars.manage
-  remteam:
-    description: Delete a team
-    usage: /remteam <team name>
+  remteams:
+    description: Delete teams
+    usage: /remteams <team name 1> <team name 2> ...
     permission: teamwars.manage
-  addmember:
-    description: Add a player to a team
-    usage: /addmember <team name> <player>
+  addmembers:
+    description: Add players to a team
+    usage: /addmembers <team name> <player 1> <player 2> ...
     permission: teamwars.manage
-  remmember:
-    description: Remove a player from a team
-    usage: /remmember <team name> <player>
-    permission: teamwars.manage
-  setvip:
-    description: Make a player a VIP in a team
-    usage: /setvip <team name> <player>
+  remmembers:
+    description: Remove players from a team
+    usage: /remmembers <team name> <player 1> <player 2> ...
     permission: teamwars.manage
   setstate:
     description: Set game state
     usage: /setstate <INACTIVE|PREPARATION|PVP|NOPVP>
     permission: teamwars.manage
+  setlives:
+    description: Set players' lives
+    usage: /setlives <player 1> <lives 1> <player 2> <lives 2> ...
+    permission: teamwars.manage
   startgame:
-    description: Set game state
+    description: Start game
     usage: /startgame <time until PVP>
     permission: teamwars.manage

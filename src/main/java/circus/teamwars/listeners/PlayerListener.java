@@ -22,15 +22,9 @@ public class PlayerListener implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
-        VIPTeam team = TeamController.getTeam(player);
+        Lives.decLives(player);
 
-        if (team == null) {
-            return;
-        }
-
-        team.killPlayer(player);
-
-        if (team.VIPDead()) {
+        if (Lives.getLives(player) == 0) {
             player.setGameMode(GameMode.SPECTATOR);
             PluginManager.server().broadcast(event.deathMessage());
 
@@ -45,17 +39,19 @@ public class PlayerListener implements Listener {
             event.setCancelled(true);
         }
 
-        TeamController.updateScoreboard();
+        ScoreboardController.refresh();
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        TeamController.updateScoreboard();
+        ScoreboardController.refresh();
+
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        TeamController.updateScoreboard();
+        ScoreboardController.refresh();
+
     }
 
     private static boolean isInside(Location loc, Location bound1, Location bound2) {
@@ -76,7 +72,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
-        if (GameStateController.state() == GameStateController.GameState.PREPARATION) {
+        if (GameState.state() == GameState.State.PREPARATION) {
             Player player = event.getPlayer();
             World world = player.getWorld();
             Location l1 = world.getSpawnLocation().clone().subtract(8, 256, 8);
@@ -95,28 +91,27 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (GameStateController.state() == GameStateController.GameState.PREPARATION) {
+        if (GameState.state() == GameState.State.PREPARATION) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
-        if (GameStateController.state() == GameStateController.GameState.PREPARATION &&
+        if (GameState.state() == GameState.State.PREPARATION &&
                 event.getEntity() instanceof Player) {
             event.setCancelled(true);
-            return;
         }
     }
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
-        if (GameStateController.state() == GameStateController.GameState.PREPARATION) {
+        if (GameState.state() == GameState.State.PREPARATION) {
             event.setCancelled(true);
             return;
         }
 
-        if (GameStateController.state() == GameStateController.GameState.NOPVP) {
+        if (GameState.state() == GameState.State.NOPVP) {
             if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
                 event.setCancelled(true);
             }

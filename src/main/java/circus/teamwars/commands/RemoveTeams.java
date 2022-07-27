@@ -1,23 +1,23 @@
 package circus.teamwars.commands;
 
-import circus.teamwars.TeamController;
+import circus.teamwars.Teams;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-public class SetVIP implements CommandExecutor {
+public class RemoveTeams implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command,
                              @NotNull String title, @NotNull String[] args)
     {
-        if (args.length != 2) {
+        if (args.length != 1) {
             return false;
         }
 
         try {
-            TeamController.setVIP(args[0], args[1]);
+            Teams.deleteTeam(args[0]);
         } catch (IllegalArgumentException e) {
             commandSender.sendMessage(e.getMessage());
             return true;

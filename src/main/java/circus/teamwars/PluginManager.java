@@ -1,18 +1,24 @@
 package circus.teamwars;
 
 import circus.teamwars.commands.*;
-import circus.teamwars.listeners.PlayerLogin;
 import circus.teamwars.listeners.PlayerListener;
 import circus.teamwars.listeners.WorldLoadListener;
 import org.bukkit.Server;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 
 public class PluginManager extends JavaPlugin {
 
     private static PluginManager instance;
     private static Server server;
+    private static int defaultLives;
 
     @Override
     public void onEnable() {
@@ -20,19 +26,59 @@ public class PluginManager extends JavaPlugin {
         server = getServer();
         org.bukkit.plugin.PluginManager pm = getServer().getPluginManager();
 
-        Objects.requireNonNull(getCommand("addteam")).setExecutor(new AddTeam());
-        Objects.requireNonNull(getCommand("remteam")).setExecutor(new RemoveTeam());
-        Objects.requireNonNull(getCommand("addmember")).setExecutor(new AddMember());
-        Objects.requireNonNull(getCommand("remmember")).setExecutor(new RemoveMember());
-        Objects.requireNonNull(getCommand("setvip")).setExecutor(new SetVIP());
+        Objects.requireNonNull(getCommand("addteams")).setExecutor(new AddTeams());
+        Objects.requireNonNull(getCommand("remteams")).setExecutor(new RemoveTeams());
+        Objects.requireNonNull(getCommand("addmembers")).setExecutor(new AddMembers());
+        Objects.requireNonNull(getCommand("remmembers")).setExecutor(new RemoveMembers());
+        Objects.requireNonNull(getCommand("setlives")).setExecutor(new SetLives());
         Objects.requireNonNull(getCommand("setstate")).setExecutor(new SetState());
         Objects.requireNonNull(getCommand("startgame")).setExecutor(new StartGame());
 
         pm.registerEvents(new PlayerListener(), this);
         pm.registerEvents(new WorldLoadListener(), this);
-        pm.registerEvents(new PlayerLogin(), this);
 
-        TeamController.initScoreboard();
+        File configFile = getConfigFile("config.yml");
+        YamlConfiguration config = new YamlConfiguration();
+        try {
+            config.load(configFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        defaultLives = config.getInt("default_lives");
+
+        configFile = getConfigFile("state.yml");
+        config = new YamlConfiguration();
+        try {
+            config.load(configFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        GameState.setConfig(config);
+
+        configFile = getConfigFile("teams.yml");
+        config = new YamlConfiguration();
+        try {
+            config.load(configFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        Teams.setConfig(config);
+
+        configFile = getConfigFile("lives.yml");
+        config = new YamlConfiguration();
+        try {
+            config.load(configFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+        Lives.setConfig(config);
+
+        ScoreboardController.refresh();
+    }
+
+    @Override
+    public void onDisable() {
+        saveData();
     }
 
     public static PluginManager instance() {
@@ -41,6 +87,33 @@ public class PluginManager extends JavaPlugin {
 
     public static Server server() {
         return server;
+    }
+
+    private File getConfigFile(String filename) {
+        File file = new File(getDataFolder(), filename);
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            saveResource(filename, false);
+        }
+        return file;
+    }
+
+    public static int defaultLives() {
+        return defaultLives;
+    }
+
+    public void saveData() {
+        File stateFile = getConfigFile("state.yml");
+        File livesFile = getConfigFile("lives.yml");
+        File teamsFile = getConfigFile("teams.yml");
+
+        try {
+            GameState.getConfig().save(stateFile);
+            Lives.getConfig().save(livesFile);
+            Teams.getConfig().save(teamsFile);
+        } catch (IOException e) {
+
+        }
     }
 
 }

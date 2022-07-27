@@ -1,8 +1,6 @@
 package circus.teamwars.commands;
 
-import circus.teamwars.GameStateController;
-import circus.teamwars.TeamController;
-import org.bukkit.ChatColor;
+import circus.teamwars.GameState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -32,7 +30,7 @@ public class StartGame implements CommandExecutor {
         }
 
         try {
-            GameStateController.startGameWithDelayedPVP(seconds);
+            GameState.startGameWithDelayedPVP(seconds);
         } catch (IllegalArgumentException e) {
             commandSender.sendMessage(e.getMessage());
             return true;
