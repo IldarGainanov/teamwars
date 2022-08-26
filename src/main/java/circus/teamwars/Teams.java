@@ -149,7 +149,7 @@ public class Teams {
             String color = teamsByName.get(name).color().name();
             ConfigurationSection teamConfig = config.createSection(name);
             teamConfig.set("color", color);
-            List<String> members = new ArrayList<String>();
+            List<String> members = new ArrayList<>();
             members.addAll(team.getEntries());
             teamConfig.set("members", members);
         }

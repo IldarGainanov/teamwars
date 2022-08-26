@@ -13,7 +13,9 @@ public class Lives {
     public static int getLives(String player) {
         if (!lives.containsKey(player)) {
             lives.put(player, PluginManager.defaultLives());
+            ScoreboardController.refresh();
         }
+
         return lives.get(player);
     }
 
@@ -22,7 +24,8 @@ public class Lives {
     }
 
     public static void setLives(String player, int newLives) {
-        lives.put(player, Math.max(0, getLives(player) - 1));
+        lives.put(player, Math.max(0, newLives));
+        ScoreboardController.refresh();
     }
 
     public static void setLives(Player player, int newLives) {
