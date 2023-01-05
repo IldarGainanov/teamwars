@@ -1,1 +1,6 @@
 default_lives: 5
+time_until_pvp: 900
+border_start: 1200
+border_min: 100
+time_until_shrink: 2700
+time_to_shrink: 1800

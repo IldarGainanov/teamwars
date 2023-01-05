@@ -1,6 +1,6 @@
 name: TeamWars
 main: circus.teamwars.PluginManager
-version: ${project.version}
+version: 1.0
 api-version: 1.17
 permissions:
   teamwars.manage:
@@ -33,5 +33,5 @@ commands:
     permission: teamwars.manage
   startgame:
     description: Start game
-    usage: /startgame <time until PVP>
+    usage: /startgame
     permission: teamwars.manage

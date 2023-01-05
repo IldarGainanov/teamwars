@@ -22,9 +22,15 @@ public class PlayerListener implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
 
-        Lives.decLives(player);
+        String team = Teams.getPlayerTeam(player);
 
-        if (Lives.getLives(player) == 0) {
+        if (team == null) {
+            return;
+        }
+
+        Lives.decLives(team);
+
+        if (Lives.getLives(team) == 0) {
             player.setGameMode(GameMode.SPECTATOR);
             PluginManager.server().broadcast(event.deathMessage());
 

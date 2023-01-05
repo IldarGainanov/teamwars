@@ -12,25 +12,12 @@ public class StartGame implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command,
                              @NotNull String title, @NotNull String[] args)
     {
-        if (args.length != 1) {
+        if (args.length != 0) {
             return false;
         }
 
-        int seconds;
         try {
-            seconds = Integer.parseInt(args[0]);
-        } catch (NumberFormatException e) {
-            commandSender.sendMessage("Could not parse time");
-            return true;
-        }
-
-        if (seconds < 0) {
-            commandSender.sendMessage("Could not parse time");
-            return true;
-        }
-
-        try {
-            GameState.startGameWithDelayedPVP(seconds);
+            GameState.startGame();
         } catch (IllegalArgumentException e) {
             commandSender.sendMessage(e.getMessage());
             return true;

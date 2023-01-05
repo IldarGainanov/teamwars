@@ -11,6 +11,7 @@ import org.bukkit.util.Vector;
 
 public class GameState {
     private static State state = State.INACTIVE;
+
     public static State state() {
         return state;
     }
@@ -60,39 +61,50 @@ public class GameState {
 
     }
 
-    public static void startGameWithDelayedPVP(int seconds) {
+    public static void startGame() {
 
-
-        if (state == State.PREPARATION) {
-
-            for (Player player : PluginManager.server().getOnlinePlayers()) {
-                player.setStatistic(Statistic.TIME_SINCE_REST, 0);
-                player.setHealth(20);
-                player.setFoodLevel(20);
-                player.setExhaustion(0);
-                player.setSaturation(5);
-                player.getInventory().clear();
-                for (PotionEffect effect : player.getActivePotionEffects()) {
-                    player.removePotionEffect(effect.getType());
-                }
-            }
-
-            setState(State.NOPVP);
-
-            PluginManager.server().broadcast(
-                    Component.text(String.format("PVP will start in %d seconds!", seconds))
-                            .color(TextColor.color(255, 0 ,0)));
-
-            PluginManager.server().getScheduler().runTaskLater(PluginManager.instance(), () -> {
-                setState(State.PVP);
-
-                PluginManager.server().broadcast(
-                        Component.text("PVP is now allowed!")
-                                .color(TextColor.color(255, 0 ,0)));
-            }, 20 * seconds);
-        } else {
+        if (state != State.PREPARATION) {
             throw new IllegalArgumentException("Game must be in preparation state");
         }
+
+        for (Player player : PluginManager.server().getOnlinePlayers()) {
+            player.setStatistic(Statistic.TIME_SINCE_REST, 0);
+            player.setHealth(20);
+            player.setFoodLevel(20);
+            player.setExhaustion(0);
+            player.setSaturation(5);
+            player.getInventory().clear();
+            for (PotionEffect effect : player.getActivePotionEffects()) {
+                player.removePotionEffect(effect.getType());
+            }
+        }
+
+        for (World world : PluginManager.server().getWorlds()) {
+            world.getWorldBorder().setSize(PluginManager.borderStart());
+        }
+
+        setState(State.NOPVP);
+
+        PluginManager.server().broadcast(Component.text(String.format("PVP will start in %d seconds!", PluginManager.timeUntilPvp())).color(TextColor.color(255, 0, 0)));
+        PluginManager.server().broadcast(Component.text(String.format("Border will shrink in %d seconds!", PluginManager.timeUntilShrink())).color(TextColor.color(255, 0, 0)));
+
+
+        PluginManager.server().getScheduler().runTaskLater(PluginManager.instance(), () -> {
+            setState(State.PVP);
+
+            PluginManager.server().broadcast(Component.text("PVP is now allowed!").color(TextColor.color(255, 0, 0)));
+
+            PluginManager.server().broadcast(Component.text(String.format("Border will shrink in %d seconds!", PluginManager.timeUntilShrink() - PluginManager.timeUntilPvp())).color(TextColor.color(255, 0, 0)));
+        }, 20 * PluginManager.timeUntilPvp());
+
+        PluginManager.server().getScheduler().runTaskLater(PluginManager.instance(), () -> {
+            for (World world : PluginManager.server().getWorlds()) {
+                world.getWorldBorder().setSize(PluginManager.borderMin(), PluginManager.timeToShrink());
+            }
+
+            PluginManager.server().broadcast(Component.text("Border is now shrinking!").color(TextColor.color(255, 0, 0)));
+        }, 20 * PluginManager.timeUntilShrink());
+
 
     }
 

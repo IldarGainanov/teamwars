@@ -36,6 +36,7 @@ public class TeamWrapper {
         }
 
         strings.add("Members: " + count);
+        strings.add("Lives: " + Lives.getLives(team.getName()));
 
         return strings;
     }
