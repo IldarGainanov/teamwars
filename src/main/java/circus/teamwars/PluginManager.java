@@ -19,6 +19,11 @@ public class PluginManager extends JavaPlugin {
     private static PluginManager instance;
     private static Server server;
     private static int defaultLives;
+    private static int borderStart;
+    private static int borderMin;
+    private static int timeUntilPvp;
+    private static int timeUntilShrink;
+    private static int timeToShrink;
 
     @Override
     public void onEnable() {
@@ -45,6 +50,11 @@ public class PluginManager extends JavaPlugin {
             e.printStackTrace();
         }
         defaultLives = config.getInt("default_lives");
+        borderStart = config.getInt("border_start");
+        borderMin = config.getInt("border_min");
+        timeUntilPvp = config.getInt("time_until_pvp");
+        timeUntilShrink = config.getInt("time_until_shrink");
+        timeToShrink = config.getInt("time_to_shrink");
 
         configFile = getConfigFile("state.yml");
         config = new YamlConfiguration();
@@ -100,6 +110,26 @@ public class PluginManager extends JavaPlugin {
 
     public static int defaultLives() {
         return defaultLives;
+    }
+
+    public static int timeUntilPvp() {
+        return timeUntilPvp;
+    }
+
+    public static int timeToShrink() {
+        return timeToShrink;
+    }
+
+    public static int borderMin() {
+        return borderMin;
+    }
+
+    public static int borderStart() {
+        return borderStart;
+    }
+
+    public static int timeUntilShrink() {
+        return timeUntilShrink;
     }
 
     public void saveData() {

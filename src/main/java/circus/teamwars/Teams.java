@@ -65,10 +65,19 @@ public class Teams {
             throw new IllegalArgumentException("This team does not exist");
         }
 
+        teamsByName.remove(name);
+
+        ArrayList<String> toRemove = new ArrayList<>();
+        for (var entry : teamsByPlayer.entrySet()) {
+            if (entry.getValue().team().getName().equals(name)) {
+                toRemove.add(entry.getKey());
+            }
+        }
+        for (String player : toRemove) {
+            teamsByPlayer.remove(player);
+        }
 
         team.team().unregister();
-
-        teamsByName.remove(name);
 
         updateScoreboard();
     }
@@ -155,5 +164,19 @@ public class Teams {
         }
 
         return config;
+    }
+
+    public static String getPlayerTeam(String player) {
+        var team = teamsByPlayer.get(player);
+
+        if (team == null) {
+            return null;
+        }
+
+        return team.team().getName();
+    }
+
+    public static String getPlayerTeam(Player player) {
+        return getPlayerTeam(player.getDisplayName());
     }
 }
