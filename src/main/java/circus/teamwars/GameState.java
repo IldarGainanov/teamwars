@@ -79,33 +79,18 @@ public class GameState {
             }
         }
 
-        for (World world : PluginManager.server().getWorlds()) {
-            world.getWorldBorder().setSize(PluginManager.borderStart());
-        }
-
         setState(State.NOPVP);
 
         PluginManager.server().broadcast(Component.text(String.format("PVP will start in %d seconds!", PluginManager.timeUntilPvp())).color(TextColor.color(255, 0, 0)));
-        PluginManager.server().broadcast(Component.text(String.format("Border will shrink in %d seconds!", PluginManager.timeUntilShrink())).color(TextColor.color(255, 0, 0)));
-
 
         PluginManager.server().getScheduler().runTaskLater(PluginManager.instance(), () -> {
             setState(State.PVP);
 
             PluginManager.server().broadcast(Component.text("PVP is now allowed!").color(TextColor.color(255, 0, 0)));
 
-            PluginManager.server().broadcast(Component.text(String.format("Border will shrink in %d seconds!", PluginManager.timeUntilShrink() - PluginManager.timeUntilPvp())).color(TextColor.color(255, 0, 0)));
         }, 20 * PluginManager.timeUntilPvp());
 
-        PluginManager.server().getScheduler().runTaskLater(PluginManager.instance(), () -> {
-            for (World world : PluginManager.server().getWorlds()) {
-                world.getWorldBorder().setSize(PluginManager.borderMin(), PluginManager.timeToShrink());
-            }
-
-            PluginManager.server().broadcast(Component.text("Border is now shrinking!").color(TextColor.color(255, 0, 0)));
-        }, 20 * PluginManager.timeUntilShrink());
-
-
+        new WorldBorder().start();
     }
 
     public static void setConfig(YamlConfiguration config) {

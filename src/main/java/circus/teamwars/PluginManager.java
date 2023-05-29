@@ -12,18 +12,17 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
+import java.util.*;
 
 public class PluginManager extends JavaPlugin {
 
     private static PluginManager instance;
     private static Server server;
     private static int defaultLives;
-    private static int borderStart;
-    private static int borderMin;
     private static int timeUntilPvp;
-    private static int timeUntilShrink;
-    private static int timeToShrink;
+    private static List<Integer> borderSizes;
+    private static List<Integer> borderTimes;
+    private static List<Integer> borderShrinkTimes;
 
     @Override
     public void onEnable() {
@@ -50,11 +49,10 @@ public class PluginManager extends JavaPlugin {
             e.printStackTrace();
         }
         defaultLives = config.getInt("default_lives");
-        borderStart = config.getInt("border_start");
-        borderMin = config.getInt("border_min");
         timeUntilPvp = config.getInt("time_until_pvp");
-        timeUntilShrink = config.getInt("time_until_shrink");
-        timeToShrink = config.getInt("time_to_shrink");
+        borderSizes = (List<Integer>) config.getList("borders");
+        borderTimes = (List<Integer>) config.getList("border_time");
+        borderShrinkTimes = (List<Integer>) config.getList("border_shrink_time");
 
         configFile = getConfigFile("state.yml");
         config = new YamlConfiguration();
@@ -116,20 +114,16 @@ public class PluginManager extends JavaPlugin {
         return timeUntilPvp;
     }
 
-    public static int timeToShrink() {
-        return timeToShrink;
+    public static List<Integer>  borderSizes() {
+        return borderSizes;
     }
 
-    public static int borderMin() {
-        return borderMin;
+    public static List<Integer>  borderTimes() {
+        return borderTimes;
     }
 
-    public static int borderStart() {
-        return borderStart;
-    }
-
-    public static int timeUntilShrink() {
-        return timeUntilShrink;
+    public static List<Integer>  borderShrinkTimes() {
+        return borderShrinkTimes;
     }
 
     public void saveData() {
